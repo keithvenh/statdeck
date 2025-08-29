@@ -5,7 +5,7 @@
   justify-content: space-evenly;
   z-index: 100;
   padding-bottom: 4vh;
-  background-color: var(--color-background);
+  background-color: var(--background);
   position: fixed;
   left: 0; right: 0; bottom: 0;
   box-shadow: 0 0 2px grey;
@@ -13,7 +13,7 @@
 
 
 .tab {
-  color: var(--color-foreground);
+  color: var(--foreground);
   width: 20vw;
   text-align: center;
   display: flex;

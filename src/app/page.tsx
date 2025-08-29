@@ -1,8 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 
+import GamesBar from "@/components/features/GamesBar";
+
 const DEFAULT_LEAGUE = "WSOB";
 const DEFAULT_YEAR = 1;
+const DEFAULT_LEAGUE_SEASON_ID = 1;
 
 export default async function Home() {
 
@@ -25,6 +28,7 @@ export default async function Home() {
       <h1 className="text-xl font-semi-bold">
         {season.league.name}
       </h1>
+      <GamesBar leagueSeasonId={DEFAULT_LEAGUE_SEASON_ID} />
       <ul>
         {season.teams.map(t => (
           <li key={t.team_season_id}>

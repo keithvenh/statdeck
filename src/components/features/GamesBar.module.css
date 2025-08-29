@@ -1,0 +1,49 @@
+.scroller { 
+    display: flex; 
+    gap: .5rem; 
+    overflow-x: auto; 
+    padding: .5rem 0; 
+}
+
+.card { 
+  min-width: 102px;
+  max-width: 120px;
+  border: 1px solid #555; 
+  border-radius: 8px; 
+  background: var(--background);
+  padding: 4px; 
+}
+
+.meta { 
+  text-align: right;
+  font-size: 0.8em; 
+  color: var(--foreground);
+}
+
+.data {
+  display: flex;
+  align-items: center;
+}
+
+.lines {
+  flex-grow: 1;
+  margin-left: 6px;
+}
+
+.line { 
+  font-size: 0.8em;
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.winner {
+  font-weight: bold;
+  color: #ededaa;
+}
+
+.sub { 
+  font-weight: bold;
+  margin-left: 12px;
+  margin-right: 6px; 
+}
