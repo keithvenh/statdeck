@@ -14,8 +14,8 @@ export default async function PlayersPage() {
       <ul className="space-y-2">
         {players.map((p: any) => (
           <li key={p.id} className="border p-2 rounded">
-            <Link href={`/players/${p.id}`}>
-              {p.nameDisplay} ({p.bats}/{p.throws})
+            <Link href={`/players/${p.player_id}`}>
+              {p.name_display} ({p.bats}/{p.throws})
             </Link>
           </li>
         ))}

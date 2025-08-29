@@ -1,0 +1,38 @@
+.nav {
+  display: flex;
+  width: 100vw; height: var(--nav-h);
+  box-sizing: border-box;
+  justify-content: space-evenly;
+  z-index: 100;
+  padding-bottom: 4vh;
+  background-color: var(--color-background);
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  box-shadow: 0 0 2px grey;
+}
+
+
+.tab {
+  color: var(--color-foreground);
+  width: 20vw;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.iconContainer {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  font-size: 1.2em;
+}
+
+.label {
+  text-transform: uppercase;
+  font-size: 0.5em;
+  letter-spacing: 2px;
+}

@@ -15,15 +15,321 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model League {
+  league_id     Int @id @default(autoincrement())
+  name          String @unique
+  abbr          String @unique
+  start_date    DateTime @db.Date
+  end_date      DateTime? @db.Date
+
+  seasons       LeagueSeason[]
+  conferences   Conference[]
+}
+
+model Conference {
+  conference_id Int @id @default(autoincrement())
+  league_id     Int
+  name_long     String
+  name_short    String
+  abbr          String
+
+  divisions     Division[]
+
+  league        League @relation(fields: [league_id], references: [league_id], onDelete: Cascade)
+
+  @@unique([league_id,abbr])
+
+  @@index([league_id])
+}
+
+model Division {
+  division_id   Int @id @default(autoincrement())
+  conference_id Int
+  name_long     String
+  name_short    String
+  abbr          String
+
+  seasons       TeamSeason[]
+
+  conference    Conference @relation(fields: [conference_id], references: [conference_id], onDelete: Cascade)
+
+  @@unique([conference_id,abbr])
+
+  @@index([conference_id])
+}
+
+model Franchise {
+  franchise_id  Int @id @default(autoincrement())
+  name          String
+  abbr          String @unique
+
+  seasons       TeamSeason[]
+}
+
+model LeagueSeason {
+  league_season_id  Int @id @default(autoincrement())
+  league_id         Int
+  league_year       Int
+  start_date        DateTime @db.Date
+  end_date          DateTime? @db.Date
+
+  teams             TeamSeason[]
+
+  league            League @relation(fields: [league_id], references: [league_id], onDelete: Cascade)
+
+  @@unique([league_id,league_year])
+}
+
+model TeamSeason {
+  team_season_id    Int @id @default(autoincrement())
+  franchise_id      Int
+  division_id       Int
+  league_season_id  Int
+  team_name         String
+  team_nickname     String?
+  team_abbr         String
+
+  roster_slots      RosterSlot[]
+
+  franchise         Franchise @relation(fields: [franchise_id], references: [franchise_id])
+  division          Division @relation(fields: [division_id], references: [division_id])
+  league_season     LeagueSeason @relation(fields: [league_season_id], references: [league_season_id])
+
+  @@unique([franchise_id, league_season_id])
+  @@unique([league_season_id,team_abbr])
+
+  @@index([franchise_id])
+  @@index([division_id])
+  @@index([league_season_id])
+}
+
+enum Hand { 
+  R 
+  L 
+  B 
+}
+
 model Player {
-  id             Int    @id @default(autoincrement())
-  altid          String
-  nameFirst      String
-  nameLast       String
-  nameFirstLast  String
-  nameLastFirst  String
-  nameDisplay    String
-  nameLineup     String
-  bats           String
-  throws         String
+  player_id         String @id
+  retrosheet_id     String @unique
+  mlb_id            String? @unique
+  name_first        String
+  name_last         String
+  name_nickname     String?
+  name_display      String?
+  name_roster       String?
+  bats              Hand?
+  throws            Hand?
+  debut             DateTime? @db.Date
+  last_game         DateTime? @db.Date
+  birthdate         DateTime? @db.Date
+  deathdate         DateTime? @db.Date
+  is_hof            Boolean @default(false)
+
+  player_cards      PlayerCard[]
+}
+
+model CardDeck {
+  deck_id       String @id
+  name          String @unique
+  abbr          String @unique
+
+  player_cards  PlayerCard[]
+}
+
+enum CardType { 
+  hitter 
+  pitcher 
+}
+
+model PlayerCard {
+  player_card_id  Int @id @default(autoincrement())
+  deck_id         String
+  player_id       String
+  card_type       CardType
+  franchise_code  String
+
+  roster_slots    RosterSlot[]
+  hitter_card     HitterCard?
+  pitcher_card    PitcherCard?
+  defense_card    DefenseCard[]
+
+  deck            CardDeck @relation(fields: [deck_id], references: [deck_id])
+  player          Player @relation(fields: [player_id], references: [player_id], onDelete: Cascade)
+
+  @@unique([player_id,deck_id,card_type,franchise_code])
+
+  @@index([player_id])
+  @@index([deck_id])
+  @@index([franchise_code])
+}
+
+model RosterSlot {
+  roster_slot_id  Int @id @default(autoincrement())
+  team_season_id  Int
+  player_card_id  Int
+  start_game      Int
+  end_game        Int?
+
+  team_season     TeamSeason @relation(fields: [team_season_id], references: [team_season_id])
+  player_card     PlayerCard @relation(fields: [player_card_id], references: [player_card_id])
+
+  @@unique([team_season_id, player_card_id, start_game, end_game])
+
+  @@index([team_season_id])
+  @@index([player_card_id])
+}
+
+enum CardLetters { 
+  AA 
+  A 
+  B 
+  C 
+  D 
+  E 
+}
+
+model HitterCard {
+  hitter_card_id  Int @id @default(autoincrement())
+  player_card_id  Int @unique
+  display_avg     Float?
+  display_ab      Int?
+  display_2b      Int?
+  display_3b      Int?
+  display_hr      Int?
+  display_rbi     Int?
+  display_bb      Int?
+  display_k       Int?
+  display_sb      Int?
+  display_cs      Int?
+  display_slg     Float?
+  display_obp     Float?
+  stealing        CardLetters?
+  is_stealer      Boolean?
+  lead_good       String?
+  lead_bad        String?
+  steal_safe_good Int?
+  steal_safe_bad  Int?
+  bunting         CardLetters?
+  hit_run         CardLetters?
+  running         Int?
+  pct_vl          Float?
+  power_vl        Boolean?
+  chance_k_vl     Int?
+  chance_bb_vl    Int?
+  chance_hbp_vl   Int?
+  chance_hit_vl   Int?
+  chance_ob_vl    Int?
+  chance_tb_vl    Int?
+  chance_1b_vl    Int?
+  chance_2b_vl    Int?
+  chance_3b_vl    Int?
+  chance_hr_vl    Int?
+  chance_bphr_vl  Int?
+  chance_bpsi_vl  Int?
+  chance_cl_vl    Int?
+  chance_gba_vl   Int?
+  calc_woba_vl    Float?
+  calc_avg_vl     Float?
+  calc_obp_vl     Float?
+  calc_slg_vl     Float?
+  calc_ops_vl     Float?
+  pct_vr          Float?
+  power_vr        Boolean?
+  chance_k_vr     Int?
+  chance_bb_vr    Int?
+  chance_hbp_vr   Int?
+  chance_hit_vr   Int?
+  chance_ob_vr    Int?
+  chance_tb_vr    Int?
+  chance_1b_vr    Int?
+  chance_2b_vr    Int?
+  chance_3b_vr    Int?
+  chance_hr_vr    Int?
+  chance_bphr_vr  Int?
+  chance_bpsi_vr  Int?
+  chance_cl_vr    Int?
+  chance_gba_vr   Int?
+  calc_woba_vr    Float?
+  calc_avg_vr     Float?
+  calc_obp_vr     Float?
+  calc_slg_vr     Float?
+  calc_ops_vr     Float?
+
+  player_card     PlayerCard @relation(fields: [player_card_id], references: [player_card_id], onDelete: Cascade)
+}
+
+model PitcherCard {
+  pitcher_card_id  Int @id @default(autoincrement())
+  player_card_id  Int @unique
+  display_w       Int?
+  display_l       Int?
+  display_era     Float?
+  display_starts  Int?
+  display_saves   Int?
+  display_ip      Int?
+  display_bb      Int?
+  display_k       Int?
+  display_hits    Int?
+  display_hr      Int?
+  fatigue_starter Int?
+  fatigue_relief  Int?
+  fatigue_closer  Int?
+  short_rest      Boolean?
+  hold            Int?
+  balk            Int?
+  wp              Int?
+  pct_vl          Float?
+  chance_k_vl     Int?
+  chance_bb_vl    Int?
+  chance_hit_vl   Int?
+  chance_ob_vl    Int?
+  chance_tb_vl    Int?
+  chance_1b_vl    Int?
+  chance_2b_vl    Int?
+  chance_3b_vl    Int?
+  chance_hr_vl    Int?
+  chance_bphr_vl  Int?
+  chance_bpsi_vl  Int?
+  chance_gba_vl   Int?
+  calc_woba_vl    Float?
+  calc_avg_vl     Float?
+  calc_obp_vl     Float?
+  calc_slg_vl     Float?
+  calc_ops_vl     Float?
+  pct_vr          Float?
+  chance_k_vr     Int?
+  chance_bb_vr    Int?
+  chance_hit_vr   Int?
+  chance_ob_vr    Int?
+  chance_tb_vr    Int?
+  chance_1b_vr    Int?
+  chance_2b_vr    Int?
+  chance_3b_vr    Int?
+  chance_hr_vr    Int?
+  chance_bphr_vr  Int?
+  chance_bpsi_vr  Int?
+  chance_gba_vr   Int?
+  calc_woba_vr    Float?
+  calc_avg_vr     Float?
+  calc_obp_vr     Float?
+  calc_slg_vr     Float?
+  calc_ops_vr     Float?
+
+  player_card     PlayerCard @relation(fields: [player_card_id], references: [player_card_id], onDelete: Cascade)
+}
+
+model DefenseCard {
+  defense_card_id   Int @id @default(autoincrement())
+  player_card_id    Int
+  position          Int
+  range             Int
+  e_rating          Int
+  throw             Int?
+  pb                Int?
+  is_primary        Boolean
+
+  player_card       PlayerCard @relation(fields: [player_card_id], references: [player_card_id], onDelete: Cascade)
+
+  @@unique([player_card_id, position])
 }
