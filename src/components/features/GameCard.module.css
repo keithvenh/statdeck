@@ -1,0 +1,63 @@
+.gamesCard {
+  border: 1px solid var(--foreground);
+  display: flex;
+  column-gap: 16px;
+  flex-wrap: wrap;
+}
+
+.headers {
+  width: 100%;
+  display: flex;
+  column-gap: 16px;
+}
+
+.headers div p {
+  font-size: 0.6em;
+  padding-top: 4px;
+}
+
+.teamSlot {
+  width: 40%;
+}
+
+.teamName {
+  padding-left: 4px;
+  padding-top: 4px;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.teamRecord {
+  font-size: 0.7em;
+  padding-left: 4px;
+  font-weight: light;
+  padding-bottom: 4px;
+  margin-top: -4px;
+}
+
+.scoreSlot {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 33.33%;
+}
+
+.scoreSlot div {
+  display: flex;
+}
+
+.scoreSlot p {
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+  padding: 0 6px;
+  width: 33.33%;
+}
+
+.gameInfo {
+  text-align: center;
+  font-size: 1.2em;
+  flex: 1;
+  align-self: center;
+}

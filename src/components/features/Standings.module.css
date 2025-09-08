@@ -1,0 +1,41 @@
+.container table {
+  width: 100%;
+}
+
+.conference th {
+  padding: 20px 0px 0px 0px;
+  font-size: 1em;
+  text-align: left;
+}
+
+.division th {
+  font-weight: bold;
+  text-align: center;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  text-align: center;
+  margin-top: 4px;
+  border-bottom: 1px solid var(--foreground);
+  border-top: 16px solid var(--background);
+}
+
+.division th:first-child {
+  text-align: left;
+  font-weight: bold;
+  padding-left: 0px;
+  text-transform: uppercase;
+  border-right: 1px solid grey;
+}
+
+.teamRow td {
+  text-align: center;
+  padding: 4px 8px;
+  font-size: 0.8em;
+}
+
+.teamRow td:first-child {
+  text-align: left;
+  border-right: 1px solid grey;
+  font-weight: bold;
+  padding-left: 6px;
+}

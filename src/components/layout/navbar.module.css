@@ -11,13 +11,17 @@
   box-shadow: 0 0 2px grey;
 }
 
-
 .tab {
   color: var(--foreground);
   width: 20vw;
   text-align: center;
   display: flex;
   flex-direction: column;
+}
+
+.activeTab {
+  background-color: var(--foreground);
+  color: var(--background);
 }
 
 .iconContainer {

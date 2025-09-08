@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 
 import GamesBar from "@/components/features/GamesBar";
+import Standings from "@/components/features/Standings";
 
 const DEFAULT_LEAGUE = "WSOB";
 const DEFAULT_YEAR = 1;
@@ -29,16 +30,7 @@ export default async function Home() {
         {season.league.name}
       </h1>
       <GamesBar leagueSeasonId={DEFAULT_LEAGUE_SEASON_ID} />
-      <ul>
-        {season.teams.map(t => (
-          <li key={t.team_season_id}>
-            <Link href={`/teams/${t.team_season_id}`}>
-              <div className="font-medium">+ {t.team_name} ({t.team_abbr})</div>
-            </Link>
-          </li>
-        ))}
-
-      </ul>
+      <Standings leagueSeasonId={DEFAULT_LEAGUE_SEASON_ID} />
     </main>
   );
 }
